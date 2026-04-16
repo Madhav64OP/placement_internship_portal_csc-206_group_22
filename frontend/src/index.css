@@ -1,1 +1,30 @@
+@import url('https://googleapis.com');
 @import "tailwindcss";
+
+@theme {
+
+  --font-sans: "Inter", ui-sans-serif, system-ui;
+
+  /* BACKGROUND */
+  --color-pip-bg: #E9EEF5;        /* softer, less flat */
+  --color-pip-surface: #FFFFFF;
+
+  /* TEXT */
+  --color-pip-text-main: #0F172A;
+  --color-pip-text-dim: #64748B;
+
+  /* PRIMARY (more official blue) */
+  --color-pip-primary: #1D4ED8;
+  --color-pip-primary-hover: #1E40AF;
+
+  /* DARK PANEL */
+  --color-pip-dark: #1E293B;
+
+  /* BORDER */
+  --color-pip-border: #CBD5E1;
+
+  /* OPTIONAL STATES */
+  --color-pip-success: #16A34A;
+  --color-pip-warning: #F59E0B;
+  --color-pip-error: #DC2626;
+}
