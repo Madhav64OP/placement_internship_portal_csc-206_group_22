@@ -16,6 +16,18 @@ const userSchema = new mongoose.Schema({
         enum: ['Student', 'PIC', 'HR'], // The 3 roles from your design doc
         required: true
     },
+    cgpa:{
+        type: Number,
+    },
+    branch:{
+        type: String,
+    },
+    currentYear:{
+        type: Number,
+    },
+    resumeLink: {
+        type: String,
+    },
     // Channeli OAuth will provide an ID, we store it here
     channeliId: {
         type: String,

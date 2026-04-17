@@ -1,3 +1,8 @@
+/**
+* Placement and Internship Portal.
+* File: Navbar.jsx
+* Description: Navigation bar component for accessing different sections of the student portal such as home, apply, track and results pages
+*/
 import React from 'react'
 import iitrLogo from '../../assets/iitr.png'
 import { Link, NavLink } from 'react-router-dom'

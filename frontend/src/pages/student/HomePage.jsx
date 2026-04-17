@@ -1,3 +1,8 @@
+/**
+* Placement and Internship Portal.
+* File: HomePage.jsx
+* Description: Main landing page for students after login, showing an overview of their application status, notifications, and blogs
+*/
 import React from 'react'
 
 function HomePage() {
