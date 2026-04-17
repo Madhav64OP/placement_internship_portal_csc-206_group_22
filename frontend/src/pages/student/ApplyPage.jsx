@@ -9,7 +9,7 @@ function ApplyPage() {
         <h2 className='text-pip-dark text-sm font-bold bg-gray-100 px-4 py-2 rounded-full uppercase tracking-wider border-2 border-pip-dark'>Intern Season</h2>
       </div>
 
-      <NavLink to='/company/Google' id='applypage-container-company' className='px-12 py-2'>
+      <NavLink to='/company-apply/Google' id='applypage-container-company' className='px-12 py-2'>
         <div id='applypage-company-google' className=' bg-white shadow-sm border hover:cursor-pointer hover:bg-gray-200 border-gray-200 rounded-xl p-4 flex justify-between items-center gap-4 hover:shadow-md transition-all duration-300'>
 
           <div id="sno" className='bg-gray-100 text-gray-500 font-bold px-4 py-2 rounded-lg text-sm'>1.0</div>
