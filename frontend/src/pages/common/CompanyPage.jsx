@@ -3,72 +3,26 @@
 * File: CompanyPage.jsx
 * Description: Component for displaying company-specific information and application details
 */
-import React from 'react'
 import { useParams } from 'react-router-dom'
+import { useCompanyById } from '../../hooks/useCompanyById';
+import { checkEligibility } from '../../utils/eligibility';
+import { useUser } from '../../hooks/useUser';
 
 function CompanyPage() {
-    // const { companyName } = useParams()
-    // We will later use a function to fetch company details using the company_id and display them here. For now we will use dummy data.
+    const { user } = useUser();
     const { companyId } = useParams();
-
-    const companyDetailsObject = {
-        '1': {
-            name: 'Google',
-            role: 'Software Engineer',
-            season: 'Intern',
-            eligibility: {
-                year: ['3rd Year', '4th Year'],
-                branches: ['CSE', 'ECE'],
-                cgpa: 8.0
-            },
-            deadline: '30th Sep 2024',
-            process: ['Online Test', 'Tech Interview', 'HR Interview'],
-            location: ['Bangalore', 'New Delhi', 'Mumbai'],
-            stipend: '₹80,000',
-            jobDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-        },
-        '2': {
-            name: 'Microsoft',
-            role: 'Software Engineer',
-            season: 'Full-time',
-            eligibility: {
-                year: ['3rd Year', '4th Year'],
-                branches: ['CSE', 'ECE'],
-                cgpa: 8.5
-            },
-            deadline: '15th Oct 2024',
-            process: ['Online Test', 'Tech Interview', 'HR Interview'],
-            location: ['Bangalore', 'Seattle', 'Redmond'],
-            stipend: '₹1,20,000',
-            jobDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-        },
-        '3': {
-            name: 'Amazon',
-            role: 'Data Analyst',
-            season: 'Intern',
-            eligibility: {
-                year: ['3rd Year', '4th Year'],
-                branches: ['CSE', 'ECE', 'CH'],
-                cgpa: 8.0
-            },
-            deadline: '10th Oct 2024',
-            process: ['Online Test', 'Tech Interview', 'HR Interview'],
-            location: ['Bangalore', 'Hyderabad', 'Pune'],
-            stipend: '₹70,000',
-            jobDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-
-        },
-    }
-
-    const companyDetails = companyDetailsObject[companyId];
-    // We will also fetch user details for checking eligibility status,applied or not and other details. Using dummy user data for now.
-
-    // const eligibilityStatus = true; 
+    const { companyDetails, loading, error } = useCompanyById(companyId);
+    const { isEligible } = checkEligibility(user, companyDetails);
+    const applied = false;
+    
+    if (loading) return <div className="text-center py-12 font-medium text-gray-600">Loading details...</div>;
+    if (error) return <div className="text-center py-12 font-medium text-red-500">{error}</div>;
+    if (!companyDetails) return <div className="text-center py-12 font-medium text-gray-600">Company not found.</div>;
 
     return (
         <div className='max-w-7xl mx-auto py-8 px-6 lg:px-8 font-sans'>
             <div className='flex justify-between items-end border-b border-gray-200 pb-4 mb-8 '>
-                <h1 className='text-pip-dark text-4xl font-extrabold tracking-tight'>{companyDetails.name}</h1>
+                <h1 className='text-pip-dark text-4xl font-extrabold tracking-tight'>{companyDetails.companyName}</h1>
                 <div className='flex justify-center items-center gap-3'>
                     <h2 className='text-pip-bg text-sm font-bold bg-pip-dark px-4 py-1.5 rounded-full uppercase tracking-wider border border-blue-200'>{companyDetails.role}</h2>
                     <h2 className='text-pip-primary text-sm font-bold bg-blue-50 px-4 py-1.5 rounded-full uppercase tracking-wider border border-blue-200'>{companyDetails.season}</h2>
@@ -86,7 +40,7 @@ function CompanyPage() {
 
                             <div className='flex items-center flex-wrap gap-2'>
                                 <span className='text-sm text-pip-bg opacity-80'>Year:</span>
-                                {companyDetails.eligibility.year.map((year, idx) => (
+                                {companyDetails.criteria.eligibleYears.map((year, idx) => (
                                     <span className='bg-pip-bg text-pip-dark px-3 py-1 rounded-full text-xs font-bold shadow-sm' key={idx}>
                                         {year}
                                     </span>
@@ -94,7 +48,7 @@ function CompanyPage() {
                             </div>
                             <div className='flex items-center flex-wrap gap-2'>
                                 <span className='text-sm text-pip-bg opacity-80'>Branches:</span>
-                                {companyDetails.eligibility.branches.map((branch, idx) => (
+                                {companyDetails.criteria.eligibleBranches.map((branch, idx) => (
                                     <span className='bg-pip-bg text-pip-dark px-3 py-1 rounded-full text-xs font-bold shadow-sm' key={idx}>
                                         {branch}
                                     </span>
@@ -102,7 +56,7 @@ function CompanyPage() {
                             </div>
                             <div className='flex items-center flex-wrap gap-2'>
                                 <span className='text-sm text-pip-bg opacity-80'>CGPA:</span>
-                                <span className='bg-green-400 text-pip-dark px-3 py-1 rounded-full text-xs font-bold shadow-sm'>{companyDetails.eligibility.cgpa}</span>
+                                <span className='bg-green-400 text-pip-dark px-3 py-1 rounded-full text-xs font-bold shadow-sm'>{companyDetails.criteria.minCGPA}</span>
                             </div>
 
                         </div>
@@ -151,7 +105,16 @@ function CompanyPage() {
                         </div>
 
                     </div>
-                    <button className='bg-green-500 max-w-fit hover:bg-green-600 text-white font-semibold rounded-lg py-2 px-8 transition-colors duration-300 shadow-sm cursor-pointer'>Apply</button>
+                    {isEligible ?
+                    !applied ?
+                        (<button className='bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg py-2 px-8 transition-colors duration-300 shadow-sm cursor-pointer w-32 text-center'>Apply</button>)
+                        :
+                        (<button className='bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg py-2 px-8 transition-colors duration-300 shadow-sm cursor-pointer w-32 text-center'>Applied</button>)
+                    :
+                    (
+                        (<button className='bg-pip-error hover:bg-pip-error text-white font-semibold rounded-lg py-2 px-8 transition-colors duration-300 shadow-sm cursor-pointer w-32 text-center'>Not Eligible</button>)
+                    )}
+                    {/* <button className='bg-green-500 max-w-fit hover:bg-green-600 text-white font-semibold rounded-lg py-2 px-8 transition-colors duration-300 shadow-sm cursor-pointer'>Apply</button> */}
                 </div>
 
 

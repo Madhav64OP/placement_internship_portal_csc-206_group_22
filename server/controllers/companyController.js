@@ -1,7 +1,7 @@
-const Company = require('../models/Company');
+import Company from '../models/Company.js';
 
 // 1. Create a new company posting (For HR/PIC)
-exports.createCompany = async (req, res) => {
+export const createCompany = async (req, res) => {
     try {
         const newCompany = new Company(req.body);
         const savedCompany = await newCompany.save();
@@ -12,11 +12,23 @@ exports.createCompany = async (req, res) => {
 };
 
 // 2. Get all companies (For Student Dashboard)
-exports.getCompanies = async (req, res) => {
+export const getCompanies = async (req, res) => {
     try {
         const companies = await Company.find().sort({ createdAt: -1 }); // Newest first
-        res.status(200).json(companies);
+        res.status(200).json({ success: true, data: companies });
     } catch (err) {
-        res.status(500).json({ message: "Error fetching companies", error: err.message });
+        res.status(500).json({ success: false, message: "Error fetching companies", error: err.message });
     }
 };
+
+export const getCompanyById = async (req, res) => {
+    try {
+        const company = await Company.findById(req.params.companyId);
+        if(!company){
+            return res.status(404).json({success:false,message: "Company not found"});
+        }
+        return res.status(200).json({success:true,data: company});
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error fetching company details", error: error.message });
+    }
+}

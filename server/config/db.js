@@ -1,5 +1,5 @@
 // minor_code_folder/server/config/db.js
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const connectDB = async () => {
     try {
@@ -7,8 +7,8 @@ const connectDB = async () => {
         console.log(`MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
         console.error(`Error connecting to MongoDB: ${error.message}`);
-        process.exit(1); // Exit process with failure
+        // process.exit(1); // Exit process with failure - commented out to allow server to start
     }
 };
 
-module.exports = connectDB;
+export default connectDB;

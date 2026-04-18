@@ -1,7 +1,8 @@
-const Application = require('../models/Application');
+import Application from '../models/Application.js';
+
 
 // Logic for a student to apply for a company
-exports.applyToCompany = async (req, res) => {
+export const applyToCompany = async (req, res) => {
     try {
         const { studentId, companyId, resumeLink } = req.body;
 
@@ -27,7 +28,7 @@ exports.applyToCompany = async (req, res) => {
 };
 
 // Logic to get all applications for a specific student (For their Dashboard)
-exports.getStudentApplications = async (req, res) => {
+export const getStudentApplications = async (req, res) => {
     try {
         const apps = await Application.find({ studentId: req.params.studentId })
             .populate('companyId', 'companyName status'); // Joins company details

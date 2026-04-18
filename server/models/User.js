@@ -1,5 +1,5 @@
 // minor_code_folder/server/models/User.js
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -19,20 +19,30 @@ const userSchema = new mongoose.Schema({
     cgpa:{
         type: Number,
     },
-    branch:{
+    phoneNo:{
         type: String,
     },
-    currentYear:{
+    rollNumber:{
+        type: String,
+    },
+    branchName:{
+        type: String,
+    },
+    program:{
+        type: String,
+    },
+    branchTag:{
+        type: String,
+    },
+    year:{
         type: Number,
     },
     resumeLink: {
         type: String,
     },
-    // Channeli OAuth will provide an ID, we store it here
-    channeliId: {
+    photoURL: {
         type: String,
-        required: function() { return this.role !== 'HR'; } // HR might not use Channeli
-    }
+    },
 }, { timestamps: true });
 
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);

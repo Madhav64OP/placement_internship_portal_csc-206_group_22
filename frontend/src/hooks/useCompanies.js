@@ -11,9 +11,10 @@ export const useCompanies = ()=>{
         setLoading(true);
         try {
             const response = await axios.get("/api/companies");
-            setCompanies(response.data);
+            // console.log(response.data)
+            setCompanies(response.data.data);
         } catch (error) {
-            setError(error.response ? error.response.data : "Network Error");
+            setError(error.response?.data || "Network Error");
         } finally {
             setLoading(false);
         }

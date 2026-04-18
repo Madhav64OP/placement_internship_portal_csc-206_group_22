@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const applicationSchema = new mongoose.Schema({
     studentId: { 
@@ -21,4 +21,4 @@ const applicationSchema = new mongoose.Schema({
     attendanceStatus: { type: String, enum: ['Absent', 'Present'], default: 'Absent' }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Application', applicationSchema);
+export default mongoose.model('Application', applicationSchema);

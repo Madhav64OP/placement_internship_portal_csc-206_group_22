@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+import { nanoid } from 'nanoid';
 
 const companySchema = new mongoose.Schema({
     _id: { 
@@ -27,4 +28,4 @@ const companySchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model('CompanyProfile', companySchema);
+export default mongoose.model('CompanyProfile', companySchema);

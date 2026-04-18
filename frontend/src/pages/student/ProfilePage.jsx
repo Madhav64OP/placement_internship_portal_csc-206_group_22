@@ -3,29 +3,25 @@
 * File: ProfilePage.jsx
 * Description: Component for displaying student profile information and allowing edits
 */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useUser } from '../../hooks/useUser';
 
 function ProfilePage() {
   // We will add a meathod to fetch student details, or get it from global state
-  const [user, setUser] = useState({
-    name: 'John Price',
-    email: 'captainprice@abc.com',
-    phoneNo: '+yz-xxx xxx xxxx',
-    rollNumber: '210123456',
-    branchName: 'Computer Science and Engineering',
-    program: 'B.Tech',
-    branchTag: 'CSE',
-    year: '4th Year',
-    cgpa: 9.2,
-    resumeURL: '',
-    photoURL: '',
-  })
+  const { user, loading, error, setUser } = useUser();
+  const [resumeLink, setResumeLink] = useState('');
+  const [editMode, setEditMode] = useState(false);
 
-  const [resumeLink, setResumeLink] = useState(user.resumeURL);
+  useEffect(() => {
+    if (user?.resumeURL) {
+      setResumeLink(user.resumeURL)
+    }
+  }, [user])
 
   const handleSave = () => {
-    setUser({...user,resumeURL: resumeLink});
-    // setResumeLink(resumeLink);
+    if (setUser && user) {
+      setUser({ ...user, resumeURL: resumeLink });
+    }
     setEditMode(false);
   }
 
@@ -34,7 +30,10 @@ function ProfilePage() {
     setEditMode(false);
   }
 
-  const [editMode, setEditMode] = useState(false);
+  if (loading) return <div className='text-center py-12 font-medium text-gray-600'>Loading profile...</div>;
+  if (error) return <div className='text-center py-12 font-medium text-red-500'>{error}</div>;
+  if (!user) return <div className='text-center py-12 font-medium text-gray-600'>User not found.</div>;
+
 
   return (
     <div className='max-w-4xl mx-auto py-8 px-6 lg:px-8 font-sans'>

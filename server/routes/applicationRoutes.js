@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { applyToCompany, getStudentApplications } = require('../controllers/applicationController');
+import { applyToCompany,getStudentApplications } from '../controllers/ApplicationController.js';
 
 // POST: http://localhost:5000/api/applications/apply
 router.post('/apply', applyToCompany);
@@ -8,4 +8,4 @@ router.post('/apply', applyToCompany);
 // GET: http://localhost:5000/api/applications/student/:studentId
 router.get('/student/:studentId', getStudentApplications);
 
-module.exports = router;
+export default router;

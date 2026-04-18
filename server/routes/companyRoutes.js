@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { createCompany, getCompanies } = require('../controllers/companyController');
+import { createCompany,getCompanies,getCompanyById } from '../controllers/companyController.js';
 
 // POST: http://localhost:5000/api/companies (To add a company)
 router.post('/', createCompany);
@@ -8,4 +8,6 @@ router.post('/', createCompany);
 // GET: http://localhost:5000/api/companies (To list all companies)
 router.get('/', getCompanies);
 
-module.exports = router;
+router.get('/:companyId',getCompanyById);
+
+export default router;
