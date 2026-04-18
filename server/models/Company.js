@@ -1,14 +1,30 @@
 const mongoose = require('mongoose');
 
 const companySchema = new mongoose.Schema({
+    _id: { 
+        type: String, 
+        default: () => nanoid(10)
+    },
     companyName: { type: String, required: true },
+    role:{ type: String, required: true },
+    season: { type: String,enum:['Intern','Placement'] ,required: true },
     jobDescription: { type: String },
-    roles: [{ type: String }],
+    stipend: { type: String },
+    location:[{ type: String }],
+    deadline: { type: Date },
     criteria: {
         minCGPA: { type: Number, default: 0 },
-        eligibleBranches: [{ type: String }]
+        eligibleBranches: [{ type: String }],
+        eligibleYears:[{type: String}]
     },
-    status: { type: String, enum: ['Upcoming', 'Ongoing', 'Completed'], default: 'Upcoming' }
+    process:[{
+        type: String
+    }],
+    currentStage:{
+        type: String,
+        enum: ['Upcoming','PPT','OA','Interview','Completed'],
+        default: 'Upcoming'
+    }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Company', companySchema);
+module.exports = mongoose.model('CompanyProfile', companySchema);
