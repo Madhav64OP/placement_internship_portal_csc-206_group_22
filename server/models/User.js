@@ -1,4 +1,3 @@
-// minor_code_folder/server/models/User.js
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -13,13 +12,26 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['Student', 'PIC', 'HR'], // The 3 roles from your design doc
+        // Aligns with the 3 primary actors + Associate Coordinator for QR [cite: 596, 649]
+        enum: ['Student', 'PIC', 'Associate', 'HR'], 
         required: true
     },
-    // Channeli OAuth will provide an ID, we store it here
+    // Used for the institute's Omniport/Channeli OAuth [cite: 503, 604]
     channeliId: {
         type: String,
-        required: function() { return this.role !== 'HR'; } // HR might not use Channeli
+        required: function() { return this.role !== 'HR'; }
+    },
+    // Data points required for PIC "Student Master & Filtering" [cite: 138]
+    branch: { 
+        type: String 
+    },
+    cgpa: { 
+        type: Number 
+    },
+    enrollmentNo: { 
+        type: String, 
+        unique: true,
+        required: function() { return this.role === 'Student'; }
     }
 }, { timestamps: true });
 
