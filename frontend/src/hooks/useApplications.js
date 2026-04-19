@@ -16,9 +16,10 @@ export const useApplications = () => {
         }
 
         try {
-            const response = await axios.get(`/api/applications/student/${user.id}`);
+            const response = await axios.get(`/api/applications/student/${user._id}`);
             setApplications(response.data);
         } catch (error) {
+            console.log(error);
             setError(error.response?.data?.message || "Failed to fetch applications");
         } finally {
             setLoading(false);

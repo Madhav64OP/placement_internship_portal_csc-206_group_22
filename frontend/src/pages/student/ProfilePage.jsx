@@ -21,14 +21,16 @@ function ProfilePage() {
 
   const handleSave = async() => {
     try {
-      await axios.put(`/api/users/${user.id}`, {
-        resumeLink
+      await axios.patch(`/api/users/${user._id}/resume`, {
+        resumeLink:resumeLink
       });
+
+
       setUser({ ...user, resumeLink });
       setEditMode(false);
     } catch (error) {
       console.error(`Failed to update resume - ${error}`);
-    }
+    } 
   }
 
   const handleCancel = () => {

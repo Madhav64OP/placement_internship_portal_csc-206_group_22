@@ -18,7 +18,7 @@ function CompanyPage() {
     const { companyId } = useParams();
     const { companyDetails, loading:companyLoading, error:companyError } = useCompanyById(companyId);
     const { isEligible } = checkEligibility(user, companyDetails);
-    const {applications, refetchApplications} = useApplications();
+    const {applications, refetchApps} = useApplications();
     const [isApplying, setisApplying] = useState(false);
     
     const {popup,showPopup,closePopup} = usePopup();
@@ -38,11 +38,11 @@ function CompanyPage() {
         try {
             setisApplying(true);
             await axios.post(`/api/applications/apply`, {
-                studentId: user.id,
+                studentId: user._id,
                 companyId: companyId,
                 resumeLink: user.resumeLink
             });
-            await refetchApplications();
+            await refetchApps();
         } catch (error) {
             showPopup("Application Failed", error.response?.data?.message || "Failed to submit application. Please try again later.", "error");
         }finally{

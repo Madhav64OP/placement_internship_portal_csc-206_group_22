@@ -1,4 +1,5 @@
 import Application from '../models/Application.js';
+import Company from '../models/Company.js';
 
 
 // Logic for a student to apply for a company
@@ -30,10 +31,12 @@ export const applyToCompany = async (req, res) => {
 // Logic to get all applications for a specific student (For their Dashboard)
 export const getStudentApplications = async (req, res) => {
     try {
+        console.log('Fetching applications for student:', req.params.studentId);
         const apps = await Application.find({ studentId: req.params.studentId })
-            .populate('companyId', 'companyName status'); // Joins company details
+            .populate('companyId', 'companyName currentStage'); // Joins company details
         res.status(200).json(apps);
     } catch (err) {
+        
         res.status(500).json({ message: "Error fetching applications", error: err.message });
     }
 };

@@ -7,8 +7,8 @@ const applicationSchema = new mongoose.Schema({
         required: true 
     },
     companyId: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Company', 
+        type: String, 
+        ref: 'CompanyProfile', 
         required: true 
     },
     resumeLink: { type: String },
