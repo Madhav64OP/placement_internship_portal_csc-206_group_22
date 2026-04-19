@@ -1,24 +1,17 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { useCompanies } from "./useCompanies";
 
 export const useCompanyById = (companyId)=>{
+    const { companies, loading: companiesLoading, error: companiesError } = useCompanies();
+
     const [companyDetails, setCompanyDetails] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     
     useEffect(() => {
-      const fetchCompanyDetails = async()=>{
-        try {
-            const response = await axios.get(`/api/companies/${companyId}`);
-            setCompanyDetails(response.data.data);
-        } catch (error) {
-            setError(error.response ? error.response.data : "Network Error");
-        }finally{
-            setLoading(false);
-        }
+      if(companies && companies.length > 0){
+        const found = companies.find(comp=> comp._id==companyId);
+        setCompanyDetails(found || null);
       }
-      fetchCompanyDetails();
-    }, [companyId]);
+    }, [companies,companyId]);
 
-    return {companyDetails,loading,error};
+    return {companyDetails,loading:companiesLoading,error:companiesError};
 }

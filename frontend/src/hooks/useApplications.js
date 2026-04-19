@@ -1,14 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
 import { useUser } from "./useUser";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { setApplications, addApplicationLocally } from "../store/applicationSlice";
 
 export const useApplications = () => {
     const {user}= useUser();
-    const [applications, setApplications] = useState([]);
-    const [loading, setLoading] = useState(true);
+
+    const dispatch = useDispatch();
+    const { data: applications, hasFetched } = useSelector((state) => state.applications);
+
+    const [loading, setLoading] = useState(!hasFetched);
     const [error, setError] = useState(null);
 
-    const fetchApplications = useCallback(async ()=>{
+    const fetchApplications = useCallback(async () =>{
         if(!user) {
             // setError("User not logged in");
             setLoading(false);
@@ -17,18 +22,27 @@ export const useApplications = () => {
 
         try {
             const response = await axios.get(`/api/applications/student/${user._id}`);
-            setApplications(response.data);
+            dispatch(setApplications(response.data));
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             setError(error.response?.data?.message || "Failed to fetch applications");
         } finally {
             setLoading(false);
         }
-    }, [user]);
+    }, [user,dispatch]);
 
     useEffect(()=>{
-        fetchApplications();
-    },[fetchApplications])
+        if(hasFetched || !user){
+            setLoading(false);
+            return;
+        }
 
-    return { applications, loading, error, refetchApps:fetchApplications };
+        fetchApplications();
+    },[fetchApplications,hasFetched,user]);
+
+    const addLocalApplication = (newApplication) =>{
+        dispatch(addApplicationLocally(newApplication));
+    }
+
+    return { applications, loading, error, refetchApps:fetchApplications ,addLocalApplication};
 }

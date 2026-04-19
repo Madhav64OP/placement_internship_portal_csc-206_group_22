@@ -15,6 +15,8 @@ import ProfilePage from './pages/student/ProfilePage.jsx';
 import HomePage from './pages/student/HomePage.jsx';
 import CompanyPage from './pages/common/CompanyPage.jsx';
 import AppliedCompanyPage from './pages/common/AppliedCompanyPage.jsx';
+import { store } from './store/store.js';
+import { Provider } from 'react-redux';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +34,8 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </StrictMode>,
 )

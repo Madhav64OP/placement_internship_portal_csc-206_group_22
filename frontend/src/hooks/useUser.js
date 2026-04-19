@@ -1,10 +1,13 @@
 import axios from "axios";
-// import { set } from "mongoose";
 import { useEffect, useState } from "react";
+import {useDispatch,useSelector} from "react-redux"
+import { setUser, updateResumeLocally } from "../store/userSlice";
 
 export const useUser = () => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const dispatch = useDispatch();
+    const {data:user,hasFetched} = useSelector((state)=>state.user);
+
+    const [loading, setLoading] = useState(!hasFetched);
     const [error, setError] = useState(null);
 
     const userID = import.meta.env.VITE_DUMMY_USER_ID;
@@ -16,10 +19,15 @@ export const useUser = () => {
             return;
         }
 
+        if(hasFetched){
+            setLoading(false);
+            return;
+        }
+
         const fetchUserData = async ()=>{
             try {
                 const response = await axios.get(`/api/users/${userID}`)
-                setUser(response.data.data);
+                dispatch(setUser(response.data.data));
             } catch (error) {
                 setError(error.response?.data?.message || "Network Error");
             }finally{
@@ -27,7 +35,11 @@ export const useUser = () => {
             }
         }
         fetchUserData();
-    }, [userID])
+    }, [userID,hasFetched,dispatch]);
     
-    return { user, loading, error, setUser };
+    const updateLocalUser = (newData)=>{
+        if(newData.resumeLink) dispatch(updateResumeLocally(newData.resumeLink));
+    }
+
+    return { user, loading, error, setUser: updateLocalUser };
 }
