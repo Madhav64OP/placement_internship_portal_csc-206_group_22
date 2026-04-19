@@ -10,16 +10,16 @@ import { NavLink } from 'react-router-dom'
 import { useCompanies } from '../../hooks/useCompanies'
 import { checkEligibility } from '../../utils/eligibility';
 import { useUser } from '../../hooks/useUser';
+import { useApplications } from '../../hooks/useApplications';
 
 
 function ApplyPage() {
 
   const {user,loading:userLoading,error:userError} = useUser();
-
   const { companies, loading:companyLoading, error:companyError } = useCompanies();
+  const {applications, loading:applicationsLoading} = useApplications();
 
-
-  if (userLoading || companyLoading) {
+  if (userLoading || companyLoading || applicationsLoading) {
     return <div className='text-center py-8'>Loading...</div>
   }
 
@@ -39,7 +39,7 @@ function ApplyPage() {
       {companies.map((company, idx) => {
         const { isEligible } = checkEligibility(user, company);
 
-        const applied = false;
+        const hasApplied = applications.some(app=>app.companyId?._id === company._id);
 
         return (
           <div key={company._id} className='bg-white shadow-sm border hover:cursor-pointer hover:bg-gray-200 border-gray-200 rounded-xl p-4 flex justify-between items-center gap-4 hover:shadow-md transition-all duration-300'>
@@ -57,7 +57,7 @@ function ApplyPage() {
               </div>
             </div>
             {isEligible ?
-              !applied ?
+              !hasApplied ?
                 (<NavLink to={`/company-apply/${company._id}`} className='bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg py-2 px-8 transition-colors duration-300 shadow-sm cursor-pointer h-12 w-32 text-center'>Apply</NavLink>)
                 :
                 (<NavLink to={`/company-apply/${company._id}`} className='bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg py-2 px-8 transition-colors duration-300 shadow-sm cursor-pointer w-32 text-center'>Applied</NavLink>)

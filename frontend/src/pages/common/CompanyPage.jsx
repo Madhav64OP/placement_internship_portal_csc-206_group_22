@@ -7,17 +7,48 @@ import { useParams } from 'react-router-dom'
 import { useCompanyById } from '../../hooks/useCompanyById';
 import { checkEligibility } from '../../utils/eligibility';
 import { useUser } from '../../hooks/useUser';
+import { useApplications } from '../../hooks/useApplications';
+import { useState } from 'react';
+import axios from 'axios';
+import { usePopup } from '../../hooks/usePopup';
+import Popup from './Popup';
 
 function CompanyPage() {
     const { user } = useUser();
     const { companyId } = useParams();
-    const { companyDetails, loading, error } = useCompanyById(companyId);
+    const { companyDetails, loading:companyLoading, error:companyError } = useCompanyById(companyId);
     const { isEligible } = checkEligibility(user, companyDetails);
-    const applied = false;
+    const {applications, refetchApplications} = useApplications();
+    const [isApplying, setisApplying] = useState(false);
     
-    if (loading) return <div className="text-center py-12 font-medium text-gray-600">Loading details...</div>;
-    if (error) return <div className="text-center py-12 font-medium text-red-500">{error}</div>;
+    const {popup,showPopup,closePopup} = usePopup();
+
+    if (companyLoading) return <div className="text-center py-12 font-medium text-gray-600">Loading details...</div>;
+    if (companyError) return <div className="text-center py-12 font-medium text-red-500">{companyError}</div>;
     if (!companyDetails) return <div className="text-center py-12 font-medium text-gray-600">Company not found.</div>;
+
+    const hasApplied = applications.some(app=>app.companyId?._id === companyId);
+
+    const handleApply = async()=>{
+        if(!user.resumeLink) {
+            showPopup("Resume Required", "Please upload your resume in your profile before applying.", "error");
+            return;
+        }
+
+        try {
+            setisApplying(true);
+            await axios.post(`/api/applications/apply`, {
+                studentId: user.id,
+                companyId: companyId,
+                resumeLink: user.resumeLink
+            });
+            await refetchApplications();
+        } catch (error) {
+            showPopup("Application Failed", error.response?.data?.message || "Failed to submit application. Please try again later.", "error");
+        }finally{
+            setisApplying(false);
+        }
+    }
 
     return (
         <div className='max-w-7xl mx-auto py-8 px-6 lg:px-8 font-sans'>
@@ -66,7 +97,14 @@ function CompanyPage() {
                             <div className='flex items-center flex-wrap gap-2'>
                                 <span className='text-sm text-pip-dark font-medium'>Deadline:</span>
                                 <span className='bg-red-50 text-red-600 border border-red-200 px-3 py-1 rounded-full text-xs font-bold shadow-sm'>
-                                    {companyDetails.deadline}
+                                    {new Date(companyDetails.deadline).toLocaleDateString('en-IN', {
+                                        day: 'numeric',
+                                        month: 'short',
+                                        year: 'numeric'
+                                    })}
+                                </span>
+                                <span className='bg-red-50 text-red-600 border border-red-200 px-3 py-1 rounded-full text-xs font-bold shadow-sm'>
+                                    {Math.ceil((new Date(companyDetails.deadline) - new Date()) / (1000 * 60 * 60 * 24))} days left
                                 </span>
                             </div>
 
@@ -106,8 +144,10 @@ function CompanyPage() {
 
                     </div>
                     {isEligible ?
-                    !applied ?
-                        (<button className='bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg py-2 px-8 transition-colors duration-300 shadow-sm cursor-pointer w-32 text-center'>Apply</button>)
+                    !hasApplied ?
+                        (<button className='bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg py-2 px-8 transition-colors duration-300 shadow-sm cursor-pointer w-32 text-center' onClick={handleApply} disabled={isApplying}>
+                            {isApplying ? 'Submitting...' : 'Apply'}
+                        </button>)
                         :
                         (<button className='bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg py-2 px-8 transition-colors duration-300 shadow-sm cursor-pointer w-32 text-center'>Applied</button>)
                     :
@@ -119,7 +159,14 @@ function CompanyPage() {
 
 
             </div>
-
+            {popup.isOpen && (
+                <Popup
+                    heading={popup.heading}
+                    message={popup.message}
+                    type={popup.type}
+                    onClose={closePopup}
+                />
+            )}
         </div>
     )
 }

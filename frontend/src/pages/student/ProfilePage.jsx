@@ -5,6 +5,7 @@
 */
 import React, { useEffect, useState } from 'react'
 import { useUser } from '../../hooks/useUser';
+import axios from 'axios';
 
 function ProfilePage() {
   // We will add a meathod to fetch student details, or get it from global state
@@ -13,20 +14,25 @@ function ProfilePage() {
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-    if (user?.resumeURL) {
-      setResumeLink(user.resumeURL)
+    if (user?.resumeLink) {
+      setResumeLink(user.resumeLink)
     }
   }, [user])
 
-  const handleSave = () => {
-    if (setUser && user) {
-      setUser({ ...user, resumeURL: resumeLink });
+  const handleSave = async() => {
+    try {
+      await axios.put(`/api/users/${user.id}`, {
+        resumeLink
+      });
+      setUser({ ...user, resumeLink });
+      setEditMode(false);
+    } catch (error) {
+      console.error(`Failed to update resume - ${error}`);
     }
-    setEditMode(false);
   }
 
   const handleCancel = () => {
-    setResumeLink(user.resumeURL);
+    setResumeLink(user.resumeLink || '');
     setEditMode(false);
   }
 
@@ -68,14 +74,48 @@ function ProfilePage() {
           <div className='flex flex-col gap-3 bg-gray-50 p-6 rounded-xl border border-gray-100'>
             <h2 className='text-lg font-bold text-gray-900 border-b border-gray-200 pb-2'>Resume</h2>
             {user.resumeLink ? (
-              <a href={user.resumeURL} target="_blank" rel="noopener noreferrer" className='text-pip-primary font-semibold hover:text-pip-primary-hover hover:underline transition-colors inline-flex items-center gap-2'>View Resume</a>
+              <a
+                href={user.resumeLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className='text-pip-primary font-semibold hover:underline'
+              >
+                View Resume
+              </a>
             ) : (
-              <p className='text-gray-500 font-medium italic'>No resume uploaded</p>
+              <p className='text-gray-500 italic'>No resume uploaded</p>
             )}
             {editMode ? (
-              <button className='self-start bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg py-2 px-6 transition-colors duration-300 shadow-sm'>Save Changes</button>
+              <div className='flex flex-col gap-3'>
+                <input
+                  type="text"
+                  value={resumeLink}
+                  onChange={(e) => setResumeLink(e.target.value)}
+                  placeholder="Paste resume link (Drive / PDF URL)"
+                  className='border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+                />
+
+                <div className='flex gap-3'>
+                  <button
+                    onClick={handleSave}
+                    className='bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg py-2 px-4'
+                  >
+                    Save
+                  </button>
+
+                  <button
+                    onClick={handleCancel}
+                    className='bg-gray-400 hover:bg-gray-500 text-white font-semibold rounded-lg py-2 px-4'
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
             ) : (
-              <button className='self-start bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg py-2 px-6 transition-colors duration-300 shadow-sm' onClick={() => setEditMode(true)}>
+              <button
+                onClick={() => setEditMode(true)}
+                className='self-start bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg py-2 px-6'
+              >
                 Edit Resume
               </button>
             )}
