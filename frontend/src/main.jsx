@@ -14,6 +14,7 @@ import ResultsPage from './pages/common/ResultsPage.jsx';
 import ProfilePage from './pages/student/ProfilePage.jsx';
 import HomePage from './pages/student/HomePage.jsx';
 import CompanyPage from './pages/common/CompanyPage.jsx';
+import AppliedCompanyPage from './pages/common/AppliedCompanyPage.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,8 +22,9 @@ const router = createBrowserRouter(
       <Route index element={<HomePage />} />
       <Route path="apply" element={<ApplyPage />} />
       <Route path="company-apply/:companyId" element={<CompanyPage />} />
+      <Route path="company-track/:userId/:companyId" element={<AppliedCompanyPage />} />
       <Route path="track" element={<TrackPage />} />
-      <Route path="results" element={<ResultsPage />} />
+      {/* <Route path="results" element={<ResultsPage />} /> */}
       <Route path="profile" element={<ProfilePage />} />
     </Route>
   )

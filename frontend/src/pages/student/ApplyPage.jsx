@@ -16,7 +16,7 @@ import { useApplications } from '../../hooks/useApplications';
 function ApplyPage() {
 
   const {user,loading:userLoading,error:userError} = useUser();
-  const { companies, loading:companyLoading, error:companyError } = useCompanies();
+  const {companies, loading:companyLoading, error:companyError } = useCompanies();
   const {applications, loading:applicationsLoading} = useApplications();
 
   if (userLoading || companyLoading || applicationsLoading) {
@@ -42,7 +42,7 @@ function ApplyPage() {
         const hasApplied = applications.some(app=>app.companyId?._id === company._id);
 
         return (
-          <div key={company._id} className='bg-white shadow-sm border hover:cursor-pointer hover:bg-gray-200 border-gray-200 rounded-xl p-4 flex justify-between items-center gap-4 hover:shadow-md transition-all duration-300'>
+          <NavLink to={`/company-apply/${company._id}`} key={company._id} className='bg-white shadow-sm border hover:cursor-pointer hover:bg-gray-200 border-gray-200 rounded-xl p-4 flex justify-between items-center gap-4 hover:shadow-md transition-all duration-300'>
             <div id="sno" className='bg-gray-100 text-gray-500 font-bold px-4 py-2 rounded-lg text-sm'>{idx + 1}.0</div>
 
             <div id="company-name-tags" className='flex flex-1 justify-between items-center bg-gray-50 py-2 px-4 rounded-lg border border-gray-100'>
@@ -66,7 +66,7 @@ function ApplyPage() {
                 (<NavLink to={`/company-apply/${company._id}`} className='bg-pip-error hover:bg-pip-error text-white font-semibold rounded-lg py-2 px-8 transition-colors duration-300 text-xs shadow-sm cursor-pointer h-12 w-32 text-center'>Not Eligible</NavLink>)
               )}
 
-          </div>
+          </NavLink>
         )
       })}
     </div>

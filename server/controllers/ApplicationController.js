@@ -31,7 +31,6 @@ export const applyToCompany = async (req, res) => {
 // Logic to get all applications for a specific student (For their Dashboard)
 export const getStudentApplications = async (req, res) => {
     try {
-        console.log('Fetching applications for student:', req.params.studentId);
         const apps = await Application.find({ studentId: req.params.studentId })
             .populate('companyId', 'companyName currentStage'); // Joins company details
         res.status(200).json(apps);

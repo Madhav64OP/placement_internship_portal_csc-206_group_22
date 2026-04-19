@@ -35,12 +35,12 @@ function StudentPortalNavbar() {
                         </NavLink>
                     </div>
                     <div id="navbar-right-results-btn">
-                        <NavLink to="/results" className={({ isActive }) =>
+                        {/* <NavLink to="/results" className={({ isActive }) =>
                             `text-pip-dark px-4 py-3 text-sm   font-semibold rounded-3xl bg-pip-bg transition-all duration-300 ${isActive ? 'bg-gray-800 opacity-45' : 'hover:opacity-45'
                         }`
                         }>
                             Results
-                        </NavLink>
+                        </NavLink> */}
                     </div>
                     <div id="navbar-right-user-profile-btn">
                         <NavLink to="/profile" className={({ isActive }) =>
