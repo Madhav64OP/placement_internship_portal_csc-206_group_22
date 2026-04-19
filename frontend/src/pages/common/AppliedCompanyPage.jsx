@@ -1,11 +1,31 @@
 import React from 'react'
 import { useParams } from 'react-router-dom';
 import { useCompanyById } from '../../hooks/useCompanyById';
+import { useApplications } from '../../hooks/useApplications';
+import UpcomingStage from '../company/stages/UpcomingStage';
+import PPTStage from '../company/stages/PPTStage';
+import OAStage from '../company/stages/OAStage';
+import InterviewStage from '../company/stages/InterviewStage';
+import CompletedStage from '../company/stages/CompletedStage';
 
 function AppliedCompanyPage() {
 
     const { userId,companyId } = useParams();
     const { companyDetails, loading:companyLoading, error:companyError } = useCompanyById(companyId);
+    const {applications, refetchApps} = useApplications();
+
+    const currentApplication = applications.find(app=> app.companyId?._id === companyId || app.companyId==companyId);
+
+    const renderCurrentStage = ()=>{
+        const props = {companyDetails,currentApplication};
+        switch(companyDetails.currentStage){
+            case 'Upcoming': return <UpcomingStage {...props}/>;
+            case 'PPT': return <PPTStage  {...props}/>;
+            case 'OA': return <OAStage  {...props}/>;
+            case 'Interview': return <InterviewStage {...props} /> ;
+            case 'Completed': return <CompletedStage  {...props}/>;
+        }
+    }
 
     if (companyLoading) return <div className="text-center py-12 font-medium text-gray-600">Loading details...</div>;
     if (companyError) return <div className="text-center py-12 font-medium text-red-500">{companyError}</div>;
@@ -24,11 +44,33 @@ function AppliedCompanyPage() {
                 <div id="main-body" className='flex flex-col w-full'>
                     <div id='trackpage-container-company' className='bg-white shadow-sm border border-gray-200 rounded-2xl p-6 lg:p-10 flex flex-col gap-8 w-full'>
 
-                        {/* Current Process */}
-                        <div>
-                            <div>this div will contain the heading and a tag of the current process, </div>
-                            <div>Here we will render our component based on the status of the company, weather its ['Upcoming','PPT','OA','Interview','Completed'] , for interview we will develop a dynamic interview queue for now, for rest of the components coming soon or done </div>
+                        <div id="current-process" className='flex flex-col gap-4 bg-blue-50 p-6 rounded-xl border border-blue-100'>
+                        <div className='flex justify-between items-center border-b border-blue-200 pb-3'>
+                            <h2 className='text-xl font-bold text-pip-dark'>Current Process Stage</h2>
+                            <span className='bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm'>
+                                {companyDetails.currentStage}
+                            </span>
                         </div>
+
+                        
+                        <div className='py-2'>
+                            {renderCurrentStage()} 
+                        </div>
+
+                       
+                        <div className='mt-2 bg-white p-4 rounded-lg border border-blue-100 flex justify-between items-center shadow-sm'>
+                            <span className='text-sm font-bold text-gray-600'>Your Application Status:</span>
+                            <span className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider
+                                ${currentApplication?.status === 'Applied' ? 'bg-yellow-100 text-yellow-800' : ''}
+                                ${currentApplication?.status === 'Shortlisted' ? 'bg-green-100 text-green-800' : ''}
+                                ${currentApplication?.status === 'Rejected' ? 'bg-red-100 text-red-800' : ''}
+                                ${currentApplication?.status === 'Waitlist' ? 'bg-orange-100 text-orange-800' : ''}
+                                ${currentApplication?.status === 'Selected' ? 'bg-pip-primary text-white' : ''}
+                            `}>
+                                {currentApplication?.status || 'Unknown'}
+                            </span>
+                        </div>
+                    </div>
 
                         <div id="upper-section" className='grid grid-cols-1 md:grid-cols-2 gap-8 w-full'>
 

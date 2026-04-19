@@ -25,6 +25,11 @@ const userSchema = new mongoose.Schema({
     rollNumber:{
         type: String,
     },
+    mySeason: { 
+        type: String, 
+        enum: ['Intern', 'Placement'], 
+        required: function() { return this.role === 'Student'; }
+    },
     branchName:{
         type: String,
     },

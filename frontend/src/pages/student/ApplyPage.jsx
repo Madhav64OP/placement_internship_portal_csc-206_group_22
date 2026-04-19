@@ -31,7 +31,7 @@ function ApplyPage() {
     <div className='max-w-7xl mx-auto py-8 px-6 lg:px-8 font-sans'>
       <div className='flex justify-between items-end border-b border-gray-200 pb-4 mb-8'>
         <h1 className='text-pip-dark text-4xl font-bold'>Apply To Companies</h1>
-        <h2 className='text-pip-dark text-sm font-bold bg-gray-100 px-4 py-2 rounded-full uppercase tracking-wider border-2 border-pip-dark'>Intern Season</h2>
+        <h2 className='text-pip-dark text-sm font-bold bg-gray-100 px-4 py-2 rounded-full uppercase tracking-wider border-2 border-pip-dark'>My Season - {user?.mySeason ? `${user.mySeason} ` : ''}</h2>
       </div>
 
       {/* <NavLink to={`/company-apply/$`} id='applypage-container-company' className='px-12 py-2'> */}
