@@ -58,12 +58,12 @@ function ApplyPage() {
             </div>
             {isEligible ?
               !hasApplied ?
-                (<NavLink to={`/company-apply/${company._id}`} className='bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg py-2 px-8 transition-colors duration-300 shadow-sm cursor-pointer h-12 w-32 text-center'>Apply</NavLink>)
+                (<button  className='bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg py-2 px-8 transition-colors duration-300 shadow-sm cursor-pointer h-12 w-32 text-center'>Apply</button>)
                 :
-                (<NavLink to={`/company-apply/${company._id}`} className='bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg py-2 px-8 transition-colors duration-300 shadow-sm cursor-pointer w-32 text-center'>Applied</NavLink>)
+                (<button  className='bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg py-2 px-8 transition-colors duration-300 shadow-sm cursor-pointer w-32 text-center'>Applied</button>)
               :
               (
-                (<NavLink to={`/company-apply/${company._id}`} className='bg-pip-error hover:bg-pip-error text-white font-semibold rounded-lg py-2 px-8 transition-colors duration-300 text-xs shadow-sm cursor-pointer h-12 w-32 text-center'>Not Eligible</NavLink>)
+                (<button  className='bg-pip-error hover:bg-pip-error text-white font-semibold rounded-lg py-2 px-8 transition-colors duration-300 text-xs shadow-sm cursor-pointer h-12 w-32 text-center'>Not Eligible</button>)
               )}
 
           </NavLink>

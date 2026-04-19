@@ -10,7 +10,7 @@ import { Link, NavLink } from 'react-router-dom'
 function StudentPortalNavbar() {
     return (
         <>
-            <nav id="navbar-body" className='flex justify-between items-center top-0 sticky bg-pip-dark py-2 px-3'>
+            <nav id="navbar-body" className='flex justify-between items-center top-0 z-50 sticky bg-pip-dark py-2 px-3'>
                 <div id="navbar-left" className='flex justify-center items-center gap-2 px-2 py-1'>
                     <NavLink to="/" id="navbar-left-pic-logo" className='text-lg font-bold text-pip-bg hover:opacity-60 transition-opacity duration-260 rounded-4xl p-1 bg-pip-dark border-2'>
                         PIC
