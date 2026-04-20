@@ -34,8 +34,6 @@ function ApplyPage() {
         <h2 className='text-pip-dark text-sm font-bold bg-gray-100 px-4 py-2 rounded-full uppercase tracking-wider border-2 border-pip-dark'>My Season - {user?.mySeason ? `${user.mySeason} ` : ''}</h2>
       </div>
 
-      {/* <NavLink to={`/company-apply/$`} id='applypage-container-company' className='px-12 py-2'> */}
-      {/* // for now we will use a dummy list for companies  */}
       {companies.map((company, idx) => {
         const { isEligible } = checkEligibility(user, company);
 

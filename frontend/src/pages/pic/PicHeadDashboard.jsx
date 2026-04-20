@@ -23,7 +23,7 @@ const PicHeadDashboard = () => {
 
   const [notifyTarget, setNotifyTarget] = useState('ALL');
   const [notifyType, setNotifyType] = useState('QUEUE_UPDATE');
-  const [notifyStatus, setNotifyStatus] = useState('idle'); // idle, sending, sent
+  const [notifyStatus, setNotifyStatus] = useState('idle'); 
 
   const calculatePriority = (shortlistCount) => (5 - shortlistCount) + 1;
   const clashCount = students.filter(s => s.hasClash).length;
@@ -55,11 +55,9 @@ const PicHeadDashboard = () => {
     fetchStudents();
   }, []);
 
-  // NOTIFICATION DISPATCHER (Process 4.0)
   const handleDispatch = () => {
     setNotifyStatus('sending');
     setTimeout(() => {
-      // Simulate DB write and async dispatch
       const newLog = {
         id: Date.now(),
         type: notifyType,
@@ -94,7 +92,6 @@ const PicHeadDashboard = () => {
             </div>
             )}
             
-            {/* LOGOUT BUTTON ADDED HERE */}
             <button 
                 onClick={handleLogout}
                 className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 font-bold py-2 px-4 rounded-xl transition-colors border border-red-200 shadow-sm cursor-pointer flex items-center gap-2"
@@ -112,7 +109,6 @@ const PicHeadDashboard = () => {
 
       <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden min-h-[600px]">
         
-        {/* PROCESS 1.0: MASTER LIST (Same as before) */}
         {activeTab === 'master-list' && (
            <div className="p-8">
             <h2 className="text-xl font-bold text-pip-dark mb-6">Process 1.0: Master List Validation</h2>
@@ -128,7 +124,6 @@ const PicHeadDashboard = () => {
                <div className="text-slate-500 font-medium">Loading student records...</div>
             ) : (
                <div className="overflow-x-auto">
-                 {/* Quick simple map to visualize the fetched students */}
                  <table className="min-w-full text-left text-sm whitespace-nowrap">
                    <thead className="uppercase tracking-wider border-b-2 border-slate-200 bg-slate-50">
                      <tr>
@@ -155,19 +150,15 @@ const PicHeadDashboard = () => {
           </div>
         )}
 
-        {/* PROCESS 3.0: DYNAMIC QUEUE (Same as before) */}
         {activeTab === 'queue' && (
            <div className="p-8 bg-slate-50 min-h-full">
-            {/* ... (Keep your existing Queue JSX here) ... */}
             <h2 className="text-xl font-bold text-pip-dark mb-6">Process 3.0: Conflict Position & Queue Management</h2>
            <AdminQueueDemo/>
           </div>
         )}
 
-        {/* PROCESS 4.0 & 5.0: NOTIFICATION SYSTEM */}
         {activeTab === 'notify' && (
           <div className="flex min-h-[600px]">
-            {/* DISPATCHER (Left Column) */}
             <div className="w-1/2 p-8 border-r border-slate-100">
               <h2 className="text-xl font-bold text-pip-dark mb-6">Process 4.0: Event Dispatcher</h2>
               
@@ -217,7 +208,6 @@ const PicHeadDashboard = () => {
               </div>
             </div>
 
-            {/* STATUS TRACKER (Right Column) */}
             <div className="w-1/2 p-8 bg-slate-50">
               <h2 className="text-xl font-bold text-pip-dark mb-6 flex justify-between items-center">
                 <span>Process 5.0: Status Tracker</span>

@@ -19,7 +19,6 @@ const CompanyManager = () => {
           </button>
         </div>
 
-        {/* COMPANY GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {companies.map((co) => (
             <div key={co.id} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 flex justify-between items-center">

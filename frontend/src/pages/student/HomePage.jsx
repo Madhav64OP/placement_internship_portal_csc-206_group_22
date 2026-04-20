@@ -23,7 +23,6 @@ function HomePage() {
 
     return (
         <div id='homepage-body' className='py-8 px-16'>
-            {/* headers */}
             <div className='flex flex-col justify-center gap-4'>
                 <h1 className='text-pip-dark text-5xl font-medium'>Welcome, {user.name.split(' ')[0]}</h1>
                 <p className='text-pip-dark text-sm font-mono'>Here's what's happening with your {user.mySeason?.toLowerCase() || 'carrer'} drive</p>
@@ -32,7 +31,6 @@ function HomePage() {
             <div  className='grid lg:grid-cols-3 gap-6 mt-8'>
                 <div className='lg:col-span-2 flex flex-col gap-4'>
 
-                    {/* left side */}
                     <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
                         <div className='bg-white shadow-sm border border-gray-200 rounded-xl p-6'>
                             <p className='text-gray-500 text-sm font-medium'>Applied</p>
@@ -86,7 +84,7 @@ function HomePage() {
                     </div>
                 </div>
 
-                {/* right side */}
+
 
                 <div className='flex flex-col gap-6'>
                     

@@ -8,7 +8,7 @@ const interviewSchema = new mongoose.Schema({
     },
     studentId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Linking to the User.js model I see in your folder!
+        ref: 'User',
         required: true
     },
     startTime: {

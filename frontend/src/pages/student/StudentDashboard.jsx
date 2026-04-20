@@ -8,8 +8,6 @@ const StudentDashboard = () => {
   }, []);
 
   const loadCompanies = async () => {
-    // 🛑 TEMPORARY MOCK DATA 
-    // We are skipping the backend fetch for now so you can see your UI!
     const mockData = [
       { _id: '1', companyName: 'NatWest', roles: ['SDE Intern', 'Analyst'], criteria: { minCGPA: 7.5 } },
       { _id: '2', companyName: 'Google', roles: ['SWE Intern'], criteria: { minCGPA: 8.0 } },

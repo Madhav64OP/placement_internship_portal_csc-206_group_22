@@ -1,6 +1,5 @@
 import Company from '../models/Company.js';
 
-// 1. Create a new company posting (For HR/PIC)
 export const createCompany = async (req, res) => {
     try {
         const newCompany = new Company(req.body);
@@ -11,10 +10,9 @@ export const createCompany = async (req, res) => {
     }
 };
 
-// 2. Get all companies (For Student Dashboard)
 export const getCompanies = async (req, res) => {
     try {
-        const companies = await Company.find().sort({ createdAt: -1 }); // Newest first
+        const companies = await Company.find().sort({ createdAt: -1 }); 
         res.status(200).json({ success: true, data: companies });
     } catch (err) {
         res.status(500).json({ success: false, message: "Error fetching companies", error: err.message });

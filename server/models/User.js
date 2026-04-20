@@ -12,7 +12,6 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        // Aligns with the 3 primary actors + Associate Coordinator for QR [cite: 596, 649]
         enum: ['Student', 'PIC', 'Associate', 'HR'], 
         required: true
     },

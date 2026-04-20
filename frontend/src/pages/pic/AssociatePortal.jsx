@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const AssociatePortal = () => {
   const { logout } = useUser();
   const navigate = useNavigate();
-  const [scanStatus, setScanStatus] = useState('idle'); // idle, scanning, success, error
+  const [scanStatus, setScanStatus] = useState('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [studentData, setStudentData] = useState(null);
 
@@ -56,12 +56,12 @@ const AssociatePortal = () => {
             <i className="fa-solid fa-right-from-bracket"></i> Logout
           </button>
 
-        {/* SCANNER INTERFACE */}
+
         <div className="p-8 flex flex-col items-center">
           
           {scanStatus === 'idle' && (
             <div className="w-64 h-64 border-4 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center bg-slate-50 relative overflow-hidden">
-              {/* Animated scanning line */}
+
               <div className="absolute top-0 left-0 w-full h-1 bg-blue-400 opacity-50 animate-[ping_2s_ease-in-out_infinite]"></div>
               <span className="text-6xl mb-4">📷</span>
               <p className="text-slate-500 font-bold text-sm">Awaiting QR Token...</p>
@@ -93,7 +93,6 @@ const AssociatePortal = () => {
             </div>
           )}
 
-          {/* SIMULATION CONTROLS */}
           <div className="mt-8 w-full border-t pt-6">
             <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-3 text-center">Test Scenarios</p>
             <div className="grid grid-cols-1 gap-2">
