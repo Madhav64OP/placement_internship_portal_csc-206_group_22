@@ -111,6 +111,33 @@ export const initializeSocketEvents = (io) => {
             await runDynamicQueueAlgorithim(io); 
         });
 
+        socket.on('update_student_status', async (data) => {
+            try {
+                const { applicationId, action } = data;
+                const app = await Application.findById(applicationId);
+                
+                if (app) {
+                    if (action === 'Reject') {
+                        app.status = 'Rejected';
+                    } else if (action === 'Pass') {
+                        // Increment the round, but leave status as 'Shortlisted'
+                        // This forces the algorithm to pull them back into the queue!
+                        app.currentRound += 1;
+                    } else if (action === 'Select') {
+                        app.status = 'Selected';
+                    }
+                    
+                    await app.save();
+                    console.log(`Application ${applicationId} updated. Action: ${action}, Round: ${app.currentRound}`);
+                    
+                    // Instantly recalculate the matrix and shift everyone's UI
+                    await runDynamicQueueAlgorithim(io);
+                }
+            } catch (error) {
+                console.error("Error processing HR action:", error);
+            }
+        });
+
         socket.on('disconnect', () => {
             console.log(`User disconnected: ${socket.id}`);
         });

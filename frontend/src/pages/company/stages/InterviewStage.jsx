@@ -12,6 +12,7 @@ function InterviewStage({ currentApplication }) {
 
   const [cooldown, setCooldown] = useState(0);
   const [liveQueue, setLiveQueue] = useState([]);
+  const [lastShiftTime,setLastShiftTime] = useState(null);
 
   const isProcessOver = currentApplication?.status === "Rejected" ||currentApplication?.status === "Selected";
 
@@ -31,6 +32,9 @@ function InterviewStage({ currentApplication }) {
 
   const handleShiftRequest = () =>{ 
     setCooldown(1800);
+    const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    setLastShiftTime(currentTime);    
+    
     socket.emit('request_shift', { studentId: user._id, companyId: companyId });
   }
 
@@ -48,14 +52,16 @@ function InterviewStage({ currentApplication }) {
   };
 
   if (isProcessOver) {
-    return (
-      <div className="bg-gray-50 border border-gray-200 rounded-xl p-10 text-center flex flex-col items-center justify-center gap-4">
-        <i className="fa-solid fa-flag-checkered text-5xl text-gray-400"></i>
-        <h2 className="text-2xl font-bold text-gray-800">Your Process is Over</h2>
-        <p className="text-gray-600 font-medium">All the best for your other processes.</p>
-      </div>
-    )
-  }
+        return (
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-10 text-center flex flex-col items-center justify-center gap-4 mt-4 shadow-inner">
+                <i className={`fa-solid text-5xl ${currentApplication?.status === 'Selected' ? 'fa-trophy text-yellow-500' : 'fa-flag-checkered text-gray-400'}`}></i>
+                <h2 className="text-2xl font-bold text-gray-800">Your Process is Over</h2>
+                <p className="text-gray-600 font-medium">
+                    {currentApplication?.status === 'Selected' ? 'Congratulations on clearing the process!' : 'All the best for your other processes.'}
+                </p>
+            </div>
+        );
+    }
 
   const myIndex = liveQueue.findIndex(s=>s.id===user?._id);
   const estimatedWait = myIndex!==-1 ? (myIndex*25) : 0;

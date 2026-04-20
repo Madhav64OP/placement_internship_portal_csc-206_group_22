@@ -17,6 +17,7 @@ import CompanyPage from './pages/common/CompanyPage.jsx';
 import AppliedCompanyPage from './pages/common/AppliedCompanyPage.jsx';
 import { store } from './store/store.js';
 import { Provider } from 'react-redux';
+import AdminQueueDemo from './pages/pic/AdminQueueDemo.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,6 +27,7 @@ const router = createBrowserRouter(
       <Route path="company-apply/:companyId" element={<CompanyPage />} />
       <Route path="company-track/:userId/:companyId" element={<AppliedCompanyPage />} />
       <Route path="track" element={<TrackPage />} />
+      <Route path="/admin-queue/:companyId" element={<AdminQueueDemo />} />
       {/* <Route path="results" element={<ResultsPage />} /> */}
       <Route path="profile" element={<ProfilePage />} />
     </Route>
