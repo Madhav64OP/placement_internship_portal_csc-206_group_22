@@ -1,29 +1,33 @@
 import React, { useState } from 'react';
+import { useUser } from '../../hooks/useUser';
+import { useNavigate } from 'react-router-dom';
 
 const AssociatePortal = () => {
+  const { logout } = useUser();
+  const navigate = useNavigate();
   const [scanStatus, setScanStatus] = useState('idle'); // idle, scanning, success, error
   const [errorMessage, setErrorMessage] = useState('');
   const [studentData, setStudentData] = useState(null);
 
-  // MOCK FUNCTION: Simulates the "Process QR Scan" logic from your pseudo-code
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
   const handleSimulateScan = (scenario) => {
     setScanStatus('scanning');
     
     setTimeout(() => {
       if (scenario === 'valid') {
-        // Matches your DB update logic: SET status = "PRESENT"
         setStudentData({ id: '23112040', name: 'Gourab Gupta', venue: 'LHC-102' });
         setScanStatus('success');
       } else if (scenario === 'duplicate') {
-        // Matches CONDITION 2: Student Already Marked Present
         setErrorMessage('Duplicate Scan: Attendance already marked');
         setScanStatus('error');
       } else {
-        // Matches CONDITION 1: Invalid Code or Wrong Venue
         setErrorMessage('Invalid QR Code or wrong Test Venue');
         setScanStatus('error');
       }
-    }, 1500); // 1.5s delay to simulate network request
+    }, 1500);
   };
 
   const resetScanner = () => {
@@ -36,7 +40,7 @@ const AssociatePortal = () => {
     <div className="min-h-screen bg-slate-900 p-6 flex flex-col items-center justify-center">
       <div className="w-full max-w-md bg-white rounded-3xl overflow-hidden shadow-2xl">
         
-        {/* HEADER */}
+        
         <div className="bg-[#0055a4] p-6 text-center text-white">
           <h1 className="text-2xl font-black tracking-wide">SCANNER NODE</h1>
           <p className="text-sm font-medium opacity-80 mt-1">Associate Coordinator Access</p>
@@ -44,6 +48,13 @@ const AssociatePortal = () => {
             VENUE: LHC-102 | TEST: NATWEST_SDE
           </div>
         </div>
+
+        <button 
+            onClick={handleLogout}
+            className="absolute top-4 right-4 bg-blue-800 hover:bg-blue-900 text-white text-xs font-bold py-2 px-3 rounded-lg transition-colors border border-blue-700 shadow-sm flex items-center gap-2 cursor-pointer"
+          >
+            <i className="fa-solid fa-right-from-bracket"></i> Logout
+          </button>
 
         {/* SCANNER INTERFACE */}
         <div className="p-8 flex flex-col items-center">

@@ -35,3 +35,29 @@ export const updateResume = async (req, res) => {
     }
 };
 
+export const loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        
+        const user = await User.findOne({ email });
+        
+        if (!user || user.password !== password) {
+            return res.status(401).json({ success: false, message: "Invalid email or password" });
+        }
+
+        return res.status(200).json({ success: true, data: user });
+    } catch (err) {
+        console.error("Login error:", err);
+        return res.status(500).json({ success: false, message: "Server error during login" });
+    }
+};
+
+export const getAllStudents = async (req, res) => {
+    try {
+        const students = await User.find({ role: 'Student' }).select('-password');
+        return res.status(200).json({ success: true, data: students });
+    } catch (err) {
+        console.error("Error fetching students:", err);
+        return res.status(500).json({ success: false, message: "Error fetching student list" });
+    }
+};

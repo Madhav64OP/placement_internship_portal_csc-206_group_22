@@ -32,6 +32,10 @@ const userSchema = new mongoose.Schema({
         enum: ['Intern', 'Placement'], 
         required: function() { return this.role === 'Student'; }
     },
+    password: {
+        type: String,
+        required: true 
+    },
     branchName:{
         type: String,
     },

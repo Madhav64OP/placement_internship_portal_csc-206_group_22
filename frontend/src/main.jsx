@@ -18,14 +18,14 @@ import AppliedCompanyPage from './pages/common/AppliedCompanyPage.jsx';
 import { store } from './store/store.js';
 import { Provider } from 'react-redux';
 import AdminQueueDemo from './pages/pic/AdminQueueDemo.jsx';
-import Login from './pages/login.jsx';
+import LoginPage from './pages/common/LoginPage.jsx';
 import PicHeadDashboard from './pages/pic/PicHeadDashboard.jsx';
 import AssociatePortal from './pages/pic/AssociatePortal.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-    <Route path="/login" element={<Login />} />
+    <Route path="/login" element={<LoginPage />} />
       <Route path="/pic-admin" element={<PicHeadDashboard />} />
       <Route path="/associate-scan" element={<AssociatePortal />} />
     <Route path="/" element={<App />} >

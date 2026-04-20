@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { useCompanies } from '../../hooks/useCompanies';
+import { use } from 'react';
 
 const socket = io(import.meta.env.VITE_BACKEND || "http://localhost:5000");
 
 function AdminQueueDemo() {
-    const { companyId } = useParams();
+    const [selectedCompanyId, setSelectedCompanyId] = useState('');
+    
     const [liveQueue, setLiveQueue] = useState([]);
     const navigate = useNavigate();
 
@@ -18,15 +20,16 @@ function AdminQueueDemo() {
         socket.emit('trigger_algorithm');
 
         socket.on('queue_updated', (allQueues) => {
-            if (allQueues[companyId]) {
-                setLiveQueue(allQueues[companyId]);
-            } else {
+            if (selectedCompanyId && allQueues[selectedCompanyId]) {
+                setLiveQueue(allQueues[selectedCompanyId]);
+            } 
+            else {
                 setLiveQueue([]);
             }
         });
 
         return () => socket.off('queue_updated');
-    }, [companyId]);
+    }, [selectedCompanyId]);
 
     const handleProcessCandidate = (applicationId, action) => {
         socket.emit('update_student_status', {
@@ -36,26 +39,15 @@ function AdminQueueDemo() {
     };
 
     const handleCompanySwitch = (e) => {
-        const selectedCompanyId = e.target.value;
-        navigate(`/admin-queue/${selectedCompanyId}`);
+        setSelectedCompanyId(e.target.value);
     }
 
 
     return (
         <div className="p-8 max-w-5xl mx-auto font-sans fade-in">
-            <div className="mb-8 border-b pb-4 flex justify-between items-center">
-                <div>
-                    <h1 className="text-3xl font-extrabold text-gray-800">PIC Admin Control Room</h1>
-                    <p className="text-gray-500 mt-1">Live Queue Management Interface</p>
-                </div>
-                <div className="bg-red-100 text-red-600 px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wider flex items-center gap-2 animate-pulse">
-                    <div className="w-3 h-3 bg-red-600 rounded-full"></div> Live System Active
-                </div>
-            </div>
-
             {!companiesLoading && interviewingCompanies.length > 0 && (
                 <select
-                    value={companyId || ''}
+                    value={selectedCompanyId || ''}
                     onChange={handleCompanySwitch}
                     className="bg-white border-2 border-gray-300 text-gray-700 font-bold py-2 px-4 rounded-xl shadow-sm focus:outline-none focus:border-pip-primary focus:ring-1 focus:ring-pip-dark transition-colors cursor-pointer w-64 my-3"
                 >

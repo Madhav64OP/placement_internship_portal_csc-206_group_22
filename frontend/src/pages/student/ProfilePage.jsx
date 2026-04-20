@@ -6,10 +6,14 @@
 import React, { useEffect, useState } from 'react'
 import { useUser } from '../../hooks/useUser';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { logoutUser } from '../../store/userSlice';
 
 function ProfilePage() {
   // We will add a meathod to fetch student details, or get it from global state
   const { user, loading, error, setUser } = useUser();
+  const navigate = useNavigate();
+
   const [resumeLink, setResumeLink] = useState('');
   const [editMode, setEditMode] = useState(false);
 
@@ -38,6 +42,11 @@ function ProfilePage() {
     setEditMode(false);
   }
 
+  const handleLogout = () =>{
+    logoutUser();
+    navigate('/login');
+  }
+
   if (loading) return <div className='text-center py-12 font-medium text-gray-600'>Loading profile...</div>;
   if (error) return <div className='text-center py-12 font-medium text-red-500'>{error}</div>;
   if (!user) return <div className='text-center py-12 font-medium text-gray-600'>User not found.</div>;
@@ -52,6 +61,13 @@ function ProfilePage() {
             <h1 className='text-3xl font-extrabold text-pip-dark tracking-tight'>{user.name}</h1>
             <h1 className='text-lg font-medium text-gray-600'>{user.program} {user.branchName}</h1>
           </div>
+
+          <button 
+                onClick={handleLogout}
+                className='bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 font-bold py-2 px-4 rounded-xl transition-colors border border-red-200 shadow-sm cursor-pointer'
+            >
+                <i className="fa-solid fa-right-from-bracket mr-2"></i> Logout
+            </button>
 
           <div className='h-24 w-24 rounded-full bg-pip-bg border-4 border-gray-50 shadow-sm flex items-center justify-center overflow-hidden text-pip-primary text-4xl flex-shrink-0 '>
             {user.photoURL ? (

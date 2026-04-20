@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
+import AdminQueueDemo from './AdminQueueDemo';
+import { useEffect } from 'react';
+import axios from 'axios';
+import { useUser } from '../../hooks/useUser';
+import { useNavigate } from 'react-router-dom';
 
 const PicHeadDashboard = () => {
+  const { logout } = useUser();
   const [activeTab, setActiveTab] = useState('master-list');
   const [cgpaFilter, setCgpaFilter] = useState(0);
 
-  // MOCK DATA: STUDENT MASTER
-  const [students] = useState([
-    { id: '23112040', name: 'Gourab Gupta', branch: 'Chemical', cgpa: 8.8, shortlists: 3, hasClash: true },
-    { id: '23410020', name: 'Madhav Ahuja', branch: 'CSE', cgpa: 9.5, shortlists: 1, hasClash: false },
-    { id: '23112015', name: 'Anant Singhal', branch: 'Mechanical', cgpa: 7.8, shortlists: 2, hasClash: true },
-  ]);
+  const navigate = useNavigate();
 
-  // MOCK DATA: NOTIFICATION LOGS (From your D2 Database specs)
+  const [students, setStudents] = useState([]);
+  const [loadingStudents, setLoadingStudents] = useState(true);
+
   const [logs, setLogs] = useState([
     { id: 1, type: 'TEST_LINK', target: '23112040', status: 'READ', time: '10:15 AM' },
     { id: 2, type: 'QUEUE_UPDATE', target: '23112015', status: 'UNREAD', time: '10:30 AM' },
@@ -25,6 +28,32 @@ const PicHeadDashboard = () => {
   const calculatePriority = (shortlistCount) => (5 - shortlistCount) + 1;
   const clashCount = students.filter(s => s.hasClash).length;
   const filteredStudents = students.filter(s => s.cgpa >= cgpaFilter);
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/users');
+        if (response.data.success) {
+          const formattedStudents = response.data.data.map(s => ({
+            _id: s._id,
+            id: s.rollNumber || s._id.substring(s._id.length - 8),
+            name: s.name,
+            branch: s.branchName || 'N/A',
+            cgpa: s.cgpa || 0,
+            shortlists: 0,
+            hasClash: false
+          }));
+          setStudents(formattedStudents);
+        }
+      } catch (error) {
+        console.error("Failed to fetch student master list:", error);
+      } finally {
+        setLoadingStudents(false);
+      }
+    };
+    
+    fetchStudents();
+  }, []);
 
   // NOTIFICATION DISPATCHER (Process 4.0)
   const handleDispatch = () => {
@@ -44,23 +73,37 @@ const PicHeadDashboard = () => {
     }, 1200);
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
     <div className="min-h-screen bg-[#f8fafc] p-8">
-      {/* HEADER SECTION */}
+
       <div className="max-w-7xl mx-auto mb-8 flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-black text-slate-900 tracking-tight">PIC HEAD PORTAL</h1>
           <p className="text-slate-500 font-medium">Placement & Internship Cell | Management Commands</p>
         </div>
-        {clashCount > 0 && (
-          <div className="bg-orange-50 border border-orange-200 px-4 py-2 rounded-xl flex items-center gap-3 shadow-sm">
-            <div className="h-2 w-2 bg-orange-500 rounded-full animate-pulse"></div>
-            <span className="text-orange-800 text-sm font-bold">{clashCount} CLASHES DETECTED</span>
-          </div>
-        )}
+        <div className="flex items-center gap-4">
+            {clashCount > 0 && (
+            <div className="bg-orange-50 border border-orange-200 px-4 py-2 rounded-xl flex items-center gap-3 shadow-sm">
+                <div className="h-2 w-2 bg-orange-500 rounded-full animate-pulse"></div>
+                <span className="text-orange-800 text-sm font-bold">{clashCount} CLASHES DETECTED</span>
+            </div>
+            )}
+            
+            {/* LOGOUT BUTTON ADDED HERE */}
+            <button 
+                onClick={handleLogout}
+                className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 font-bold py-2 px-4 rounded-xl transition-colors border border-red-200 shadow-sm cursor-pointer flex items-center gap-2"
+            >
+                <i className="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
       </div>
 
-      {/* TAB NAVIGATION */}
       <div className="max-w-7xl mx-auto mb-6 flex gap-2">
         <button onClick={() => setActiveTab('master-list')} className={`px-6 py-2 rounded-lg font-bold transition ${activeTab === 'master-list' ? 'bg-[#0055a4] text-white shadow-lg' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}`}>Student Master & Filtering</button>
         <button onClick={() => setActiveTab('queue')} className={`px-6 py-2 rounded-lg font-bold transition ${activeTab === 'queue' ? 'bg-[#0055a4] text-white shadow-lg' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}`}>Dynamic Interview Queue</button>
@@ -72,10 +115,43 @@ const PicHeadDashboard = () => {
         {/* PROCESS 1.0: MASTER LIST (Same as before) */}
         {activeTab === 'master-list' && (
            <div className="p-8">
-            {/* ... (Keep your existing Master List JSX here) ... */}
             <h2 className="text-xl font-bold text-slate-800 mb-6">Process 1.0: Master List Validation</h2>
-            {/* For brevity in the chat, keeping it simple. It's the same table from the previous step. */}
             <p className="text-slate-500">Student filtering table goes here...</p>
+          </div>
+        )}
+
+        {activeTab === 'master-list' && (
+           <div className="p-8">
+            <h2 className="text-xl font-bold text-slate-800 mb-6">Process 1.0: Master List Validation</h2>
+            
+            {loadingStudents ? (
+               <div className="text-slate-500 font-medium">Loading student records...</div>
+            ) : (
+               <div className="overflow-x-auto">
+                 {/* Quick simple map to visualize the fetched students */}
+                 <table className="min-w-full text-left text-sm whitespace-nowrap">
+                   <thead className="uppercase tracking-wider border-b-2 border-slate-200 bg-slate-50">
+                     <tr>
+                       <th scope="col" className="px-6 py-4">Enrollment ID</th>
+                       <th scope="col" className="px-6 py-4">Name</th>
+                       <th scope="col" className="px-6 py-4">Branch</th>
+                       <th scope="col" className="px-6 py-4">CGPA</th>
+                     </tr>
+                   </thead>
+                   <tbody>
+                     {filteredStudents.map(student => (
+                       <tr key={student._id} className="border-b border-slate-100 hover:bg-slate-50">
+                         <td className="px-6 py-4 font-mono text-slate-600">{student.id}</td>
+                         <td className="px-6 py-4 font-bold text-slate-800">{student.name}</td>
+                         <td className="px-6 py-4 text-slate-600">{student.branch}</td>
+                         <td className="px-6 py-4 font-medium text-green-700">{student.cgpa}</td>
+                       </tr>
+                     ))}
+                   </tbody>
+                 </table>
+                 {filteredStudents.length === 0 && <p className="mt-4 text-slate-500">No students match current criteria.</p>}
+               </div>
+            )}
           </div>
         )}
 
@@ -84,7 +160,7 @@ const PicHeadDashboard = () => {
            <div className="p-8 bg-slate-50 min-h-full">
             {/* ... (Keep your existing Queue JSX here) ... */}
             <h2 className="text-xl font-bold text-slate-800 mb-6">Process 3.0: Conflict Position & Queue Management</h2>
-            <p className="text-slate-500">Queue visualization goes here...</p>
+           <AdminQueueDemo/>
           </div>
         )}
 
