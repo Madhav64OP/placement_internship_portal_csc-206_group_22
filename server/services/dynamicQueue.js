@@ -8,9 +8,9 @@ export const runDynamicQueueAlgorithim = async(io)=>{
         const totalCompaniesOnDay = activeCompanies.length;
 
         const allApplications = await Application.find({
-            companyId:{$in: activeCompanies.map(comp =>comp._id)},
-            status:['Shortlisted','In_Interview']
-        }).populate('studentId','name cgpa _id');
+            companyId: {$in: activeCompanies.map(comp => comp._id)},
+            status: { $in: ['Shortlisted', 'In_Interview'] } 
+        }).populate('studentId', 'name cgpa _id');
 
         let companyQueues = {};
         activeCompanies.forEach(comp => companyQueues[comp._id] = []);
@@ -24,7 +24,7 @@ export const runDynamicQueueAlgorithim = async(io)=>{
 
         allApplications.forEach((app=>{
             const candidate ={
-                id:app.studentId._id,
+                id:app.studentId._id.toString(),
                 name:app.studentId.name,
                 cgpa:app.studentId.cgpa,
                 appId:app._id.toString(),
@@ -40,6 +40,12 @@ export const runDynamicQueueAlgorithim = async(io)=>{
         
         for(let compId in companyQueues){
             companyQueues[compId].sort((a,b)=>{
+                if(a.status ==='In_Interview' && b.status !=='In_Interview') return -1;
+
+                if(b.status ==='In_Interview' && a.status !=='In_Interview') return 1;
+
+                if (a.currentRound !== b.currentRound) return a.currentRound -b.currentRound;
+
                 if(b.priority!==a.priority) return a.priority - b.priority;
                 return b.cgpa-a.cgpa;
             })
@@ -118,7 +124,10 @@ export const initializeSocketEvents = (io) => {
                 const app = await Application.findById(applicationId);
                 
                 if (app) {
-                    if (action === 'Reject') {
+                    if (action === 'Start_Interview'){
+                        app.status = 'In_Interview';
+                    }
+                    else if (action === 'Reject') {
                         app.status = 'Rejected';
                     } else if (action === 'Pass') {
                         app.currentRound += 1;

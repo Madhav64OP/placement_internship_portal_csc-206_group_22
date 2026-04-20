@@ -4,7 +4,7 @@ import { useUser } from '../../../hooks/useUser';
 import { useParams } from 'react-router-dom';
 import {io} from 'socket.io-client'
 
-const socket = io(import.meta.env.VITE_BACKEND);
+const socket = io(import.meta.env.VITE_BACKEND || "http://localhost:5000");
 
 function InterviewStage({ currentApplication }) {
   const { user } = useUser();
@@ -66,6 +66,9 @@ function InterviewStage({ currentApplication }) {
   const myIndex = liveQueue.findIndex(s=>s.id===user?._id);
   const estimatedWait = myIndex!==-1 ? (myIndex*25) : 0;
 
+  const activeStudent = liveQueue.length> 0 ? liveQueue[0]: null;
+  const remainingQueue = liveQueue.length >1 ? liveQueue.slice(1) : [];
+
   return (
     <div className="flex flex-col gap-6 w-full fade-in">
 
@@ -88,26 +91,53 @@ function InterviewStage({ currentApplication }) {
 
       <div id="main-box" className="flex items-center gap-4 overflow-x-auto py-6 px-4 bg-gray-50 border border-gray-200 rounded-xl custom-scrollbar shadow-inner">
 
-        <div className="flex flex-col items-center justify-center min-w-[150px] h-[160px] bg-pip-dark text-white rounded-xl shadow-lg border-2 border-pip-primary relative">
-          <i className="fa-solid fa-user-tie text-5xl mb-2"></i>
-          <h3 className="font-bold text-lg tracking-wide">Interviewer</h3>
-          <p className="text-xs text-blue-200 font-medium mt-1">In Session <i className="fa-solid fa-spinner fa-spin ml-1"></i></p>
+        <div className="flex items-center gap-4 p-4 rounded-2xl bg-white border-2 border-green-400 shadow-md relative shrink-0">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-[10px] font-black uppercase px-3 py-1 rounded-full tracking-widest shadow-sm">
+            Ongoing Interview
+          </div>
+
+          <div className="flex flex-col items-center justify-center min-w-[120px] h-[140px] bg-pip-dark text-white rounded-xl shadow-inner relative">
+            <i className="fa-solid fa-user-tie text-4xl mb-2"></i>
+            <h3 className="font-bold text-sm tracking-wide">Interviewer</h3>
+            <p className="text-[10px] text-blue-200 font-medium mt-1">In Session <i className="fa-solid fa-spinner fa-spin ml-1"></i></p>
+          </div>
+
+          {activeStudent ? (
+            <>
+              <div className="text-green-500 flex flex-col items-center justify-center animate-pulse px-2">
+                <i className="fa-solid fa-arrow-right-arrow-left text-xl"></i>
+              </div>
+              
+              <StudentCard
+                student={activeStudent}
+                position={1}
+                isCurrentUser={activeStudent.id === user?._id}
+              />
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center min-w-[140px] h-[140px] border-2 border-dashed border-gray-300 rounded-xl text-gray-400">
+              <p className="text-xs font-bold uppercase">Awaiting</p>
+            </div>
+          )}
         </div>
 
-        <div className="text-gray-300 px-2 flex-shrink-0">
-          <i className="fa-solid fa-arrow-right-long text-3xl"></i>
-        </div>
+    
+        {remainingQueue.length > 0 && (
+          <div className="text-gray-300 px-2 flex-shrink-0">
+            <i className="fa-solid fa-arrow-right-long text-3xl"></i>
+          </div>
+        )}
 
-        {liveQueue.map((student, idx) => (
+        {remainingQueue.map((student, idx) => (
           <React.Fragment key={student.id}>
             <StudentCard 
               student={student}
-              position={idx + 1}
+              position={idx + 2}
               isCurrentUser={student.id === user?._id}
               // isCurrentUser={true}
             />
 
-            {idx < liveQueue.length - 1 && (
+            {idx < remainingQueue.length - 1 && (
               <div className="text-gray-300 px-2 flex-shrink-0">
                 <i className="fa-solid fa-arrow-right-long text-xl"></i>
               </div>
