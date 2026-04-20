@@ -5,12 +5,12 @@ import dotenv from 'dotenv';
 import applicationRoutes from './routes/applicationRoutes.js';
 import companyRoutes from './routes/companyRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import interviewRoutes from './routes/interviewRoutes' 
 import { Server } from 'socket.io';
 import {createServer} from 'http'
 
 dotenv.config();
 import { initializeSocketEvents } from './services/dynamicQueue.js';
-
 const app = express();
 const PORT = process.env.PORT || 5000; 
 
@@ -32,7 +32,7 @@ initializeSocketEvents(io);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/companies', companyRoutes);
 app.use('/api/users', userRoutes);
-
+app.use('/api/interviews', interviewRoutes);
 
 httpServer.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

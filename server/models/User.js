@@ -1,4 +1,3 @@
-// minor_code_folder/server/models/User.js
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
@@ -13,7 +12,8 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['Student', 'PIC', 'HR'], // The 3 roles from your design doc
+        // Aligns with the 3 primary actors + Associate Coordinator for QR [cite: 596, 649]
+        enum: ['Student', 'PIC', 'Associate', 'HR'], 
         required: true
     },
     cgpa:{
@@ -24,6 +24,8 @@ const userSchema = new mongoose.Schema({
     },
     rollNumber:{
         type: String,
+        unique:true,
+        required:function() {return this.role === 'Student'}
     },
     mySeason: { 
         type: String, 
