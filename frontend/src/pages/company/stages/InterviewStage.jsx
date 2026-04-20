@@ -97,7 +97,8 @@ function InterviewStage({ currentApplication }) {
             <StudentCard 
               student={student}
               position={idx + 1}
-              isCurrentUser={student.id === user?._id}
+              // isCurrentUser={student.id === user?._id}
+              isCurrentUser={true}
             />
 
             {idx < liveQueue.length - 1 && (

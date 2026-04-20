@@ -39,7 +39,7 @@ export const runDynamicQueueAlgorithim = async(io)=>{
         
         for(let compId in companyQueues){
             companyQueues[compId].sort((a,b)=>{
-                if(b.priority!==a.priority) return b.priority - a.priority;
+                if(b.priority!==a.priority) return a.priority - b.priority;
                 return b.cgpa-a.cgpa;
             })
         }
@@ -49,8 +49,11 @@ export const runDynamicQueueAlgorithim = async(io)=>{
 
         let maxExpectedSlots = Math.max(...Object.values(companyQueues).map(q=>q.length))
 
-        for(let timeSlot = 0; timeSlot <maxExpectedSlots;timeSlot++){
-            busyTrackerHashMap[timeSlot]= new Set();
+        let timeSlot = 0;
+
+        while (Object.values(companyQueues).some(q => q.length > 0)) {
+            
+            busyTrackerHashMap[timeSlot] = new Set();
             finalSchedule[timeSlot] = {};
 
             for(let compId in companyQueues){
@@ -71,6 +74,13 @@ export const runDynamicQueueAlgorithim = async(io)=>{
                         studentIdx++;
                     }
                 }
+            }
+            
+            timeSlot++;
+            
+            if (timeSlot > 100) {
+                console.log("CRITICAL: Algorithm hit failsafe loop limit.");
+                break; 
             }
         }
 
