@@ -29,6 +29,8 @@ function AdminQueueDemo() {
         });
     };
 
+    
+
     return (
         <div className="p-8 max-w-5xl mx-auto font-sans fade-in">
             <div className="mb-8 border-b pb-4 flex justify-between items-center">

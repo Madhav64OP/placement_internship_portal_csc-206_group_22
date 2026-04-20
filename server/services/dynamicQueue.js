@@ -9,7 +9,7 @@ export const runDynamicQueueAlgorithim = async(io)=>{
 
         const allApplications = await Application.find({
             companyId:{$in: activeCompanies.map(comp =>comp._id)},
-            status:'Shortlisted'
+            status:['Shortlisted','In_Interview']
         }).populate('studentId','name cgpa _id');
 
         let companyQueues = {};
@@ -21,7 +21,6 @@ export const runDynamicQueueAlgorithim = async(io)=>{
             studentShortlistCount[sid] = (studentShortlistCount[sid] || 0) + 1;
         })
 
-        // Assignment of Priorities
 
         allApplications.forEach((app=>{
             const candidate ={
@@ -29,6 +28,8 @@ export const runDynamicQueueAlgorithim = async(io)=>{
                 name:app.studentId.name,
                 cgpa:app.studentId.cgpa,
                 appId:app._id.toString(),
+                currentRound:app.currentRound,
+                status:app.status
             }
             candidate.priority = (totalCompaniesOnDay - studentShortlistCount[candidate.id] + 1);
 
@@ -120,9 +121,8 @@ export const initializeSocketEvents = (io) => {
                     if (action === 'Reject') {
                         app.status = 'Rejected';
                     } else if (action === 'Pass') {
-                        // Increment the round, but leave status as 'Shortlisted'
-                        // This forces the algorithm to pull them back into the queue!
                         app.currentRound += 1;
+                        app.status = 'Shortlisted'
                     } else if (action === 'Select') {
                         app.status = 'Selected';
                     }
@@ -130,7 +130,6 @@ export const initializeSocketEvents = (io) => {
                     await app.save();
                     console.log(`Application ${applicationId} updated. Action: ${action}, Round: ${app.currentRound}`);
                     
-                    // Instantly recalculate the matrix and shift everyone's UI
                     await runDynamicQueueAlgorithim(io);
                 }
             } catch (error) {
