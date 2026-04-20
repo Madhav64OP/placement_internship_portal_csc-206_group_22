@@ -37,21 +37,21 @@ const AssociatePortal = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 p-6 flex flex-col items-center justify-center">
+    <div className="min-h-screen bg-pip-bg p-6 flex flex-col items-center justify-center">
       <div className="w-full max-w-md bg-white rounded-3xl overflow-hidden shadow-2xl">
         
         
-        <div className="bg-[#0055a4] p-6 text-center text-white">
+        <div className="bg-pip-dark p-6 text-center text-white">
           <h1 className="text-2xl font-black tracking-wide">SCANNER NODE</h1>
           <p className="text-sm font-medium opacity-80 mt-1">Associate Coordinator Access</p>
-          <div className="mt-4 inline-block bg-blue-800 px-3 py-1 rounded-full text-xs font-mono">
+          <div className="mt-4 inline-block bg-pip-primary px-3 py-1 rounded-full text-xs font-mono">
             VENUE: LHC-102 | TEST: NATWEST_SDE
           </div>
         </div>
 
         <button 
             onClick={handleLogout}
-            className="absolute top-4 right-4 bg-blue-800 hover:bg-blue-900 text-white text-xs font-bold py-2 px-3 rounded-lg transition-colors border border-blue-700 shadow-sm flex items-center gap-2 cursor-pointer"
+            className="absolute top-4 right-4 bg-pip-primary hover:bg-blue-900 text-white text-xs font-bold py-2 px-3 rounded-lg transition-colors border border-blue-700 shadow-sm flex items-center gap-2 cursor-pointer"
           >
             <i className="fa-solid fa-right-from-bracket"></i> Logout
           </button>
@@ -78,7 +78,7 @@ const AssociatePortal = () => {
           {scanStatus === 'success' && (
             <div className="w-64 h-64 border-4 border-green-500 rounded-2xl flex flex-col items-center justify-center bg-green-50 text-center p-4">
               <div className="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center text-3xl font-bold mb-4">✓</div>
-              <p className="text-green-800 font-black text-lg">ACCESS GRANTED</p>
+              <p className="text-pip-success font-black text-lg">ACCESS GRANTED</p>
               <p className="text-green-700 font-medium text-sm mt-1">{studentData.name}</p>
               <p className="text-green-600 font-mono text-xs">{studentData.id}</p>
               <p className="text-[10px] text-green-500 mt-2 uppercase font-bold">Link Dispatched to Student Portal</p>
@@ -88,7 +88,7 @@ const AssociatePortal = () => {
           {scanStatus === 'error' && (
             <div className="w-64 h-64 border-4 border-red-500 rounded-2xl flex flex-col items-center justify-center bg-red-50 text-center p-4">
               <div className="w-16 h-16 bg-red-500 text-white rounded-full flex items-center justify-center text-3xl font-bold mb-4">✕</div>
-              <p className="text-red-800 font-black text-lg">ACCESS DENIED</p>
+              <p className="text-pip-error font-black text-lg">ACCESS DENIED</p>
               <p className="text-red-600 font-medium text-xs mt-2">{errorMessage}</p>
             </div>
           )}
@@ -123,7 +123,7 @@ const AssociatePortal = () => {
             {scanStatus !== 'idle' && scanStatus !== 'scanning' && (
               <button 
                 onClick={resetScanner}
-                className="mt-4 w-full bg-slate-900 text-white font-bold py-3 rounded-lg hover:bg-slate-800 shadow-md"
+                className="mt-4 w-full bg-pip-bg text-white font-bold py-3 rounded-lg hover:bg-slate-800 shadow-md"
               >
                 Ready for Next Scan
               </button>

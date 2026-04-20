@@ -79,11 +79,11 @@ const PicHeadDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] p-8">
+    <div className="min-h-screen bg-pip-bg p-8 font-sans">
 
-      <div className="max-w-7xl mx-auto mb-8 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto mb-8 flex font-sans justify-between items-center">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">PIC HEAD PORTAL</h1>
+          <h1 className="text-3xl font-black text-pip-dark tracking-tight">PIC HEAD PORTAL</h1>
           <p className="text-slate-500 font-medium">Placement & Internship Cell | Management Commands</p>
         </div>
         <div className="flex items-center gap-4">
@@ -105,9 +105,9 @@ const PicHeadDashboard = () => {
       </div>
 
       <div className="max-w-7xl mx-auto mb-6 flex gap-2">
-        <button onClick={() => setActiveTab('master-list')} className={`px-6 py-2 rounded-lg font-bold transition ${activeTab === 'master-list' ? 'bg-[#0055a4] text-white shadow-lg' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}`}>Student Master & Filtering</button>
-        <button onClick={() => setActiveTab('queue')} className={`px-6 py-2 rounded-lg font-bold transition ${activeTab === 'queue' ? 'bg-[#0055a4] text-white shadow-lg' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}`}>Dynamic Interview Queue</button>
-        <button onClick={() => setActiveTab('notify')} className={`px-6 py-2 rounded-lg font-bold transition ${activeTab === 'notify' ? 'bg-[#0055a4] text-white shadow-lg' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}`}>Notification Command Center</button>
+        <button onClick={() => setActiveTab('master-list')} className={`px-6 py-2 rounded-lg font-bold transition ${activeTab === 'master-list' ? 'bg-pip-primary text-white shadow-lg' : 'bg-white text-pip-text-dim border border-slate-200 hover:bg-slate-50'}`}>Student Master & Filtering</button>
+        <button onClick={() => setActiveTab('queue')} className={`px-6 py-2 rounded-lg font-bold transition ${activeTab === 'queue' ? 'bg-pip-primary text-white shadow-lg' : 'bg-white  border text-pip-text-dim border-slate-200 hover:bg-slate-50'}`}>Dynamic Interview Queue</button>
+        <button onClick={() => setActiveTab('notify')} className={`px-6 py-2 rounded-lg font-bold transition ${activeTab === 'notify' ? 'bg-pip-primary text-white shadow-lg' : 'bg-white text-pip-text-dim border border-slate-200 hover:bg-slate-50'}`}>Notification Command Center</button>
       </div>
 
       <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden min-h-[600px]">
@@ -115,14 +115,14 @@ const PicHeadDashboard = () => {
         {/* PROCESS 1.0: MASTER LIST (Same as before) */}
         {activeTab === 'master-list' && (
            <div className="p-8">
-            <h2 className="text-xl font-bold text-slate-800 mb-6">Process 1.0: Master List Validation</h2>
+            <h2 className="text-xl font-bold text-pip-dark mb-6">Process 1.0: Master List Validation</h2>
             <p className="text-slate-500">Student filtering table goes here...</p>
           </div>
         )}
 
         {activeTab === 'master-list' && (
            <div className="p-8">
-            <h2 className="text-xl font-bold text-slate-800 mb-6">Process 1.0: Master List Validation</h2>
+            <h2 className="text-xl font-bold text-pip-dark mb-6">Process 1.0: Master List Validation</h2>
             
             {loadingStudents ? (
                <div className="text-slate-500 font-medium">Loading student records...</div>
@@ -142,7 +142,7 @@ const PicHeadDashboard = () => {
                      {filteredStudents.map(student => (
                        <tr key={student._id} className="border-b border-slate-100 hover:bg-slate-50">
                          <td className="px-6 py-4 font-mono text-slate-600">{student.id}</td>
-                         <td className="px-6 py-4 font-bold text-slate-800">{student.name}</td>
+                         <td className="px-6 py-4 font-bold text-pip-dark">{student.name}</td>
                          <td className="px-6 py-4 text-slate-600">{student.branch}</td>
                          <td className="px-6 py-4 font-medium text-green-700">{student.cgpa}</td>
                        </tr>
@@ -159,7 +159,7 @@ const PicHeadDashboard = () => {
         {activeTab === 'queue' && (
            <div className="p-8 bg-slate-50 min-h-full">
             {/* ... (Keep your existing Queue JSX here) ... */}
-            <h2 className="text-xl font-bold text-slate-800 mb-6">Process 3.0: Conflict Position & Queue Management</h2>
+            <h2 className="text-xl font-bold text-pip-dark mb-6">Process 3.0: Conflict Position & Queue Management</h2>
            <AdminQueueDemo/>
           </div>
         )}
@@ -169,7 +169,7 @@ const PicHeadDashboard = () => {
           <div className="flex min-h-[600px]">
             {/* DISPATCHER (Left Column) */}
             <div className="w-1/2 p-8 border-r border-slate-100">
-              <h2 className="text-xl font-bold text-slate-800 mb-6">Process 4.0: Event Dispatcher</h2>
+              <h2 className="text-xl font-bold text-pip-dark mb-6">Process 4.0: Event Dispatcher</h2>
               
               <div className="space-y-6">
                 <div>
@@ -199,7 +199,7 @@ const PicHeadDashboard = () => {
                 </div>
 
                 <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 w-2 h-full bg-[#0055a4]"></div>
+                  <div className="absolute top-0 left-0 w-2 h-full bg-pip-primary"></div>
                   <p className="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Template Preview</p>
                   <p className="text-slate-700 font-mono text-sm leading-relaxed">
                     [System_Variable_Name], <br/>
@@ -210,7 +210,7 @@ const PicHeadDashboard = () => {
                 <button 
                   onClick={handleDispatch}
                   disabled={notifyStatus !== 'idle'}
-                  className={`w-full font-bold py-4 rounded-xl transition shadow-lg ${notifyStatus === 'sending' ? 'bg-blue-300 text-blue-800' : notifyStatus === 'sent' ? 'bg-green-500 text-white shadow-green-200' : 'bg-[#0055a4] hover:bg-blue-800 text-white shadow-blue-200'}`}
+                  className={`w-full font-bold py-4 rounded-xl transition shadow-lg ${notifyStatus === 'sending' ? 'bg-blue-300 text-blue-800' : notifyStatus === 'sent' ? 'bg-green-500 text-white shadow-green-200' : 'bg-pip-primary hover:bg-blue-800 text-white shadow-blue-200'}`}
                 >
                   {notifyStatus === 'sending' ? 'Dispatching to Portal...' : notifyStatus === 'sent' ? '✓ Dispatch Successful' : 'Trigger Notification'}
                 </button>
@@ -219,7 +219,7 @@ const PicHeadDashboard = () => {
 
             {/* STATUS TRACKER (Right Column) */}
             <div className="w-1/2 p-8 bg-slate-50">
-              <h2 className="text-xl font-bold text-slate-800 mb-6 flex justify-between items-center">
+              <h2 className="text-xl font-bold text-pip-dark mb-6 flex justify-between items-center">
                 <span>Process 5.0: Status Tracker</span>
                 <span className="text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded font-mono">Live Logs</span>
               </h2>
